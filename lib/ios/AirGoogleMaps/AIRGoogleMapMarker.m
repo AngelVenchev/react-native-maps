@@ -115,6 +115,26 @@ CGRect unionRect(CGRect a, CGRect b) {
   [_realMarker.map setSelectedMarker:Nil];
 }
 
+- (void)redraw {
+  if (!_realMarker.iconView) return;
+  
+  BOOL oldValue = _realMarker.tracksViewChanges;
+  
+  if (oldValue == YES)
+  {
+    // Immediate refresh, like right now. Not waiting for next frame.
+    UIView *view = _realMarker.iconView;
+    _realMarker.iconView = nil;
+    _realMarker.iconView = view;
+  }
+  else
+  {
+    // Refresh according to docs
+    _realMarker.tracksViewChanges = YES;
+    _realMarker.tracksViewChanges = NO;
+  }
+}
+
 - (UIView *)markerInfoContents {
   if (self.calloutView && !self.calloutView.tooltip) {
     return self.calloutView;
@@ -205,7 +225,7 @@ CGRect unionRect(CGRect a, CGRect b) {
   }
 
   if (!_iconImageView) {
-    // prevent glitch with marker (cf. https://github.com/airbnb/react-native-maps/issues/738)
+    // prevent glitch with marker (cf. https://github.com/react-native-community/react-native-maps/issues/738)
     UIImageView *empyImageView = [[UIImageView alloc] init];
     _iconImageView = empyImageView;
     [self iconViewInsertSubview:_iconImageView atIndex:0];
@@ -256,6 +276,34 @@ CGRect unionRect(CGRect a, CGRect b) {
                                                                    [self iconViewInsertSubview:imageView atIndex:0];
                                                                  });
                                                                }];
+}
+
+- (void)setIconSrc:(NSString *)iconSrc
+{
+  _iconSrc = iconSrc;
+
+  if (_reloadImageCancellationBlock) {
+    _reloadImageCancellationBlock();
+    _reloadImageCancellationBlock = nil;
+  }
+
+  _reloadImageCancellationBlock =
+  [_bridge.imageLoader loadImageWithURLRequest:[RCTConvert NSURLRequest:_iconSrc]
+                                          size:self.bounds.size
+                                         scale:RCTScreenScale()
+                                       clipped:YES
+                                    resizeMode:RCTResizeModeCenter
+                                 progressBlock:nil
+                              partialLoadBlock:nil
+                               completionBlock:^(NSError *error, UIImage *image) {
+                                 if (error) {
+                                   // TODO(lmr): do something with the error?
+                                   NSLog(@"%@", error);
+                                 }
+                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                   _realMarker.icon = image;
+                                 });
+                               }];
 }
 
 - (void)setTitle:(NSString *)title {

@@ -26,6 +26,7 @@
 @property (nonatomic, copy) RCTDirectEventBlock onDrag;
 @property (nonatomic, copy) RCTDirectEventBlock onDragEnd;
 @property (nonatomic, copy) NSString *imageSrc;
+@property (nonatomic, copy) NSString *iconSrc;
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *subtitle;
 @property (nonatomic, strong) UIColor *pinColor;
@@ -39,6 +40,7 @@
 
 - (void)showCalloutView;
 - (void)hideCalloutView;
+- (void)redraw;
 - (UIView *)markerInfoContents;
 - (UIView *)markerInfoWindow;
 - (void)didTapInfoWindowOfMarker:(AIRGMSMarker *)marker;
