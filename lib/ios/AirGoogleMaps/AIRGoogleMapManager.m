@@ -50,6 +50,8 @@ RCT_EXPORT_MODULE()
   map.delegate = self;
   map.indoorDisplay.delegate = self;
   self.map = map;
+  map.isAccessibilityElement = "YES";
+  map.accessibilityElementsHidden = "NO";
   return map;
 }
 

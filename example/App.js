@@ -44,6 +44,7 @@ import ImageOverlayWithURL from './examples/ImageOverlayWithURL';
 import AnimatedNavigation from './examples/AnimatedNavigation';
 import OnPoiClick from './examples/OnPoiClick';
 import IndoorMap from './examples/IndoorMap';
+import TestIdMarkers from './examples/TestIdMarkers';
 import CameraControl from './examples/CameraControl';
 
 const IOS = Platform.OS === 'ios';
@@ -160,6 +161,7 @@ class App extends React.Component {
       [LegalLabel, 'Reposition the legal label', true],
       [SetNativePropsOverlays, 'Update native props', true],
       [CustomOverlay, 'Custom Overlay Component', true],
+      [TestIdMarkers, 'Test ID for Automation', true]
       [MapKml, 'Load Map with KML', true],
       [BugMarkerWontUpdate, 'BUG: Marker Won\'t Update (Android)', true],
       [ImageOverlayWithAssets, 'Image Overlay Component with Assets', true],
